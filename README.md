@@ -21,10 +21,10 @@ All the heavy lifting is done by the constructor and the prefix increment operat
         point(p),
         delta(Point2D(q[0] - p[0], q[1] - p[1]))
     {
-        id = std::abs(delta[0]) >= std::abs(delta[1]) ? 0 : 1;
-        s[id] = delta[id] >= 0 ? 1 : -1;
-        s[1 - id] = delta[1 - id] >= 0 ? 1 : -1;
-        delta = Point2D(delta[0] * s[0], delta[1] * s[1]);
+        id = abs(delta[0]) >= abs(delta[1]) ? 0 : 1;
+        increment[id] = delta[id] >= 0 ? 1 : -1;
+        increment[1 - id] = delta[1 - id] >= 0 ? 1 : -1;
+        delta = Point2D(delta[0] * increment[0], delta[1] * increment[1]);
         error = 2 * delta[1 - id] - delta[id];
     }
 ```
@@ -32,10 +32,10 @@ All the heavy lifting is done by the constructor and the prefix increment operat
 ```c++
     BresenhamLineIterator operator++()
     {
-        point[id] += s[id];
+        point[id] += increment[id];
         if (error > 0)
         {
-            point[1 - id] += s[1 - id];
+            point[1 - id] += increment[1 - id];
             error -= 2 * delta[id];
         }
         error += 2 * delta[1 - id];
